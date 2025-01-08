@@ -44,8 +44,8 @@ if option == "Log Expense":
 
 elif option == "View/Export Data":
     st.header("View & Export Data")
-    start_date = st.date_input("Start Date", value=datetime.today(pytz.timezone('Asia/Kolkata')) - timedelta(days=7))
-    end_date = st.date_input("End Date", value=datetime.today(pytz.timezone('Asia/Kolkata')))
+    start_date = st.date_input("Start Date", value=datetime.now(pytz.timezone('Asia/Kolkata')) - timedelta(days=7))
+    end_date = st.date_input("End Date", value=datetime.now(pytz.timezone('Asia/Kolkata')))
     
     if st.button("Export as CSV"):
         query = """
@@ -132,8 +132,8 @@ elif option == "Delete Data":
             except:
                 st.error("Deletion failed")
     elif choice == "Delete between date range":
-        lrange = st.date_input("Enter start date",value=datetime.today(pytz.timezone('Asia/Kolkata')))
-        urange = st.date_input("Enter end date",value=datetime.today(pytz.timezone('Asia/Kolkata')))
+        lrange = st.date_input("Enter start date",value=datetime.now(pytz.timezone('Asia/Kolkata')))
+        urange = st.date_input("Enter end date",value=datetime.now(pytz.timezone('Asia/Kolkata')))
 
         query = f"DELETE FROM expenses WHERE CAST(timestamp AS DATE) BETWEEN '{lrange}' AND '{urange}' "
         if st.button("Delete data"):
