@@ -28,7 +28,8 @@ option = st.sidebar.selectbox("Choose a feature", ["Log Expense", "View/Export D
 def get_ist_time():
     ist = pytz.timezone("Asia/Kolkata")
     utc_now = datetime.utcnow().replace(tzinfo=pytz.utc)
-    return utc_now.astimezone(ist)
+    ist_time = utc_now.astimezone(ist)
+    return ist_time.replace(tzinfo=None)
 
 if option == "Log Expense":
     st.header("Log a New Expense")
