@@ -33,7 +33,7 @@ def get_ist_time():
 
 if option == "Log Expense":
     st.header("Log a New Expense")
-    expense_amt = st.number_input("Expense Amount (in INR)", step=0.1)
+    expense_amt = st.number_input("Expense Amount (in INR)", step=1)
     reason = st.text_input("Reason for the expense")
     expense_cat = st.selectbox("Expense Category", ["Food", "Groceries", "Travel", "Utilities", "Leisure", "Others"])
     
