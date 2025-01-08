@@ -63,8 +63,8 @@ elif option == "View/Export Data":
 
 elif option == "Visualize Data":
     st.header("Visualize Data")
-    start_date = st.date_input("Start Date", value=datetime.today() - timedelta(days=7))
-    end_date = st.date_input("End Date", value=datetime.today())
+    start_date = st.date_input("Start Date", value=datetime.now(pytz.timezone('Asia/Kolkata')) - timedelta(days=7))
+    end_date = st.date_input("End Date", value=datetime.now(pytz.timezone('Asia/Kolkata')))
 
     if st.button("Generate Visualization"):
         query = """
