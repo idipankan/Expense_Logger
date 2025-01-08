@@ -27,7 +27,8 @@ option = st.sidebar.selectbox("Choose a feature", ["Log Expense", "View/Export D
 # Function to get IST timestamp
 def get_ist_time():
     ist = pytz.timezone("Asia/Kolkata")
-    return datetime.now(ist)
+    utc_now = datetime.utcnow().replace(tzinfo=pytz.utc)
+    return utc_now.astimezone(ist)
 
 if option == "Log Expense":
     st.header("Log a New Expense")
