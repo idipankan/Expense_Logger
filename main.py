@@ -67,26 +67,55 @@ elif option == "Visualize Data":
     end_date = st.date_input("End Date", value=datetime.now(pytz.timezone('Asia/Kolkata')))
 
     if st.button("Generate Visualization"):
-        query = """
-        SELECT CAST(timestamp AS DATE) as day, SUM(expense_amt) as total_expense
-        FROM expenses
-        WHERE CAST(timestamp AS DATE) BETWEEN ? AND ?
-        GROUP BY day
-        ORDER BY day
-        """
-        data = conn.execute(query, (start_date, end_date)).fetchdf()
-        
-        if not data.empty:
-            chart = alt.Chart(data).mark_line().encode(
-                x="day:T",
-                y="total_expense:Q",
-                tooltip=["day:T", "total_expense:Q"]
-            ).properties(
-                title="Daily Total Expenses"
-            )
-            st.altair_chart(chart, use_container_width=True)
-        else:
-            st.warning("No data available for the selected date range.")
+    # Query for daily total expenses
+    query_daily = """
+    SELECT CAST(timestamp AS DATE) as day, SUM(expense_amt) as total_expense
+    FROM expenses
+    WHERE CAST(timestamp AS DATE) BETWEEN ? AND ?
+    GROUP BY day
+    ORDER BY day
+    """
+    daily_data = conn.execute(query_daily, (start_date, end_date)).fetchdf()
+    
+    # Query for expense category total
+    query_category = """
+    SELECT expense_cat, SUM(expense_amt) as total_amount
+    FROM expenses
+    WHERE CAST(timestamp AS DATE) BETWEEN ? AND ?
+    GROUP BY expense_cat
+    ORDER BY total_amount DESC
+    """
+    category_data = conn.execute(query_category, (start_date, end_date)).fetchdf()
+
+    # Daily total expenses visualization
+    if not daily_data.empty:
+        daily_chart = alt.Chart(daily_data).mark_line(point=True).encode(
+            x="day:T",
+            y="total_expense:Q",
+            tooltip=["day:T", "total_expense:Q"]
+        ).properties(
+            title="Daily Total Expenses"
+        ).configure_point(
+            size=100
+        )
+        st.altair_chart(daily_chart, use_container_width=True)
+    else:
+        st.warning("No data available for the selected date range.")
+    
+    # Expense category visualization
+    if not category_data.empty:
+        category_chart = alt.Chart(category_data).mark_bar().encode(
+            x=alt.X("expense_cat:N", title="Expense Category"),
+            y=alt.Y("total_amount:Q", title="Total Amount"),
+            tooltip=["expense_cat:N", "total_amount:Q"]
+        ).properties(
+            title="Total Expenses by Category"
+        ).configure_bar(
+            size=40
+        )
+        st.altair_chart(category_chart, use_container_width=True)
+    else:
+        st.warning("No data available for the selected date range.")
 
 elif option == "Update Data":
 
